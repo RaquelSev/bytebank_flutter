@@ -26,27 +26,14 @@ class FormularioTransferencia extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0), //Borda
-              child: TextField(
-                controller: _controladorCampoNumeroConta,
-                style: TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
-                    labelText: 'Número da conta', hintText: '0000'),
-                keyboardType: TextInputType.number,
-              ),
+            Editor(controlador: _controladorCampoNumeroConta,
+                rotulo: 'Número da conta',
+                dica: '0000'
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0), //Borda
-              child: TextField(
-                controller: _controladorCampoValor,
-                style: TextStyle(fontSize: 24.0),
-                decoration: InputDecoration(
-                    icon: Icon(Icons.monetization_on),
-                    labelText: 'Valor',
-                    hintText: '0.00'),
-                keyboardType: TextInputType.number,
-              ),
+            Editor (controlador: _controladorCampoValor,
+                rotulo: 'Valor',
+                dica: '0.00',
+                icone: Icons.monetization_on
             ),
             ElevatedButton(
               child : Text('Confirmar'),
@@ -69,6 +56,34 @@ class FormularioTransferencia extends StatelessWidget {
         ));
   }
 }
+
+class Editor extends StatelessWidget {
+
+  final TextEditingController? controlador; //? Antes para permitir parametro nulo no construtor - permitir a restrição
+  final String? rotulo;
+  final dica;
+  final IconData? icone;
+
+  Editor({this.controlador, this.rotulo, this.dica, this.icone});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0), //Borda
+      child: TextField(
+        controller: controlador,
+        style: TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+            icon: Icon(icone),
+            labelText: rotulo,
+            hintText: dica
+        ),
+        keyboardType: TextInputType.number,
+      ),
+    );
+  }
+}
+
 
 class ListaTransferencias extends StatelessWidget {
   //Transformando a classe em widget e o less eu nao consigo mudar
