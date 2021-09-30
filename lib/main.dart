@@ -37,23 +37,24 @@ class FormularioTransferencia extends StatelessWidget {
             ),
             ElevatedButton(
               child : Text('Confirmar'),
-              onPressed: () {
-                debugPrint('Clicou confirmar');
-                final int? numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
-                final double? valor = double.tryParse(_controladorCampoValor.text);
-                if(numeroConta != null && valor != null) {
-                  final transferenciaCriada = Transferencia(valor, numeroConta);
-                  debugPrint('$transferenciaCriada');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('$transferenciaCriada'),
-                    ),
-                  );
-                }
-              },
+              onPressed: () => _criaTransferencia(context),
             ),
           ],
         ));
+  }
+
+  void _criaTransferencia(BuildContext context) {
+
+    final int? numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
+    final double? valor = double.tryParse(_controladorCampoValor.text);
+    if(numeroConta != null && valor != null) {
+      final transferenciaCriada = Transferencia(valor, numeroConta);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$transferenciaCriada'),
+        ),
+      );
+    }
   }
 }
 
@@ -64,7 +65,7 @@ class Editor extends StatelessWidget {
   final dica;
   final IconData? icone;
 
-  Editor({this.controlador, this.rotulo, this.dica, this.icone});
+  Editor( {this.controlador, this.rotulo, this.dica, this.icone});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class Editor extends StatelessWidget {
         controller: controlador,
         style: TextStyle(fontSize: 24.0),
         decoration: InputDecoration(
-            icon: Icon(icone),
+            icon: icone != null ? Icon(icone) : null, //Ref ternária
             labelText: rotulo,
             hintText: dica
         ),
