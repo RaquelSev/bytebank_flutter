@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_collection_literals
+
 import 'package:flutter/material.dart';
 
 void main() => runApp(BytebankApp());
@@ -7,7 +9,7 @@ class BytebankApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: FormularioTransferencia(),
+        body: ListaTransferencias(),
       ),
     );
   }
@@ -49,6 +51,8 @@ class FormularioTransferencia extends StatelessWidget {
     final double? valor = double.tryParse(_controladorCampoValor.text);
     if(numeroConta != null && valor != null) {
       final transferenciaCriada = Transferencia(valor, numeroConta);
+      debugPrint('Criando transferência');
+      Navigator.pop(context, transferenciaCriada);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('$transferenciaCriada'),
@@ -88,6 +92,9 @@ class Editor extends StatelessWidget {
 
 class ListaTransferencias extends StatelessWidget {
   //Transformando a classe em widget e o less eu nao consigo mudar
+
+  final List<Transferencia> _transferencias = [];
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -95,17 +102,27 @@ class ListaTransferencias extends StatelessWidget {
       appBar: AppBar(
         title: Text('Transferências'),
       ),
-      body: Column(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          ItemTransferencia(Transferencia(100.0, 1000)),
-          ItemTransferencia(Transferencia(200.0, 1001)),
-          ItemTransferencia(Transferencia(300.0, 3000)),
-        ],
+      body: ListView.builder(
+        itemCount: _transferencias.length,
+        itemBuilder: (context, indice) {
+          final transferencia = _transferencias[indice];
+          return ItemTransferencia(transferencia);
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+          child: Icon(Icons.add), onPressed: () {
+        final Future<Transferencia?> future = Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FormularioTransferencia();
+        }));
+        future.then((transferenciaRecebida) {
+          debugPrint('chegou no then do future');
+          debugPrint('$transferenciaRecebida');
+          _transferencias.add(transferenciaRecebida!);
+          if(transferenciaRecebida != null) {
+            _transferencias.add(transferenciaRecebida);
+          }
+        });
+      },
       ),
     );
   }
